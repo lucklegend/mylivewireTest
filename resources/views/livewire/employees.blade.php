@@ -1,9 +1,9 @@
-@include('livewire.create')
 <div div class="rounded overflow-hidden shadow-lg m-4 px-4 pb-4 bg-white">
     <div class="flex flex-col rounded">
         <div class="overflow-x-auto sm:-mx-6 lg:-mx-8 rounded">
             <div class="py-2 inline-block min-w-full sm:px-6 lg:px-8 rounded">
-
+                @include('livewire.create')
+                @include('livewire.delete')
                 <div id="topnav" class="relative overflow-x-auto  sm:rounded-lg">
                     <div class="">
                         <div class=" grid grid-flow-col auto-cols-max gap-4 py-4 mb-2 relative">
@@ -15,18 +15,11 @@
                                             <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path>
                                         </svg>
                                     </div>
-                                    <input type="text" wire:model.debounce.300ms="search" id="table-search" class="font-medium bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg grid focus:ring-blue-500 focus:border-blue-500 pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search Employee">
+                                    <input type="text" id="table-search" class="font-medium bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg grid focus:ring-blue-500 focus:border-blue-500 pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search Employee">
                                 </div>
                             </div>
 
                             <div class="row mt-1 mr-3">
-
-                                <select class="border-0 relative w-60 text-black bg-gray-100 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-left inline-flex items-left dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                                    <option class="p-4 hover:bg-gray-200">All Department</option>
-                                    <option class="p-4 hover:bg-gray-200">Sales</option>
-                                    <option class="p-4 hover:bg-gray-200">Inter-Agency Department</option>
-                                </select>
-
                                 <button id="dropdownDepartment" data-dropdown-toggle="dropdownDept" class="relative w-60 text-black bg-gray-100 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">All Department
                                     <svg class="ml-2 w-4 h-4 absolute right-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
@@ -108,7 +101,7 @@
                                         </button>
                                     </div>
                                     <div class="row  mt-1">
-                                        <button type="button" data-modal-toggle="defaultModal" class=" text-white bg-sky-500 hover:bg-sky-600 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+                                        <button type="button" data-modal-toggle="createModal" class=" text-white bg-sky-500 hover:bg-sky-600 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
                                             <svg class="w-5 h-5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                                             </svg>
@@ -136,6 +129,7 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                @if(count($employees) >0)
                                 @foreach($employees as $emp)
                                 <tr>
                                     <td class="px-6 ">{{ $emp->employee_code }}</td>
@@ -146,15 +140,20 @@
                                     <td class="px-6 ">{{ $emp->status }}</td>
                                     <td class="px-6 ">
                                         <button wire:click="edit({{ $emp->id }})" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Edit</button>
-                                        <button wire:click="delete({{ $emp->id }})" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Delete</button>
+                                        <button wire:click.prevent.delay="deleteId({{ $emp->id }})" data-modal-toggle="deleteEmp-modal" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Delete</button>
                                     </td>
                                 </tr>
                                 @endforeach
+                                @else
+                                <tr>
+                                    <td colspan="7" class="p-6" align="center">No Record Found</td>
+                                </tr>
+                                @endif
                             </tbody>
                         </table>
                     </div>
-
                 </div>
             </div>
         </div>
     </div>
+</div>

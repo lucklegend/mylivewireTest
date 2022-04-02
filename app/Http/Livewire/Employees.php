@@ -9,9 +9,9 @@ use Livewire\WithPagination;
 class Employees extends Component
 {
     use WithPagination;
-    public $employees, $employee_code, $name, $department, $position, $hire_date, $status;
+    public $search, $employees, $employee_code, $name, $department, $position, $hire_date, $status;
     public $isOpen = 0;
-    public $search;
+    public $deleteId = '';
     protected $queryString = ['search'];
     protected $rules = [
         'employee_code' => 'required',
@@ -83,7 +83,11 @@ class Employees extends Component
 
         $this->openModal();
     }
-
+    public function deleteId($id)
+    {
+        $this->deletedId = $id;
+        $this->isOpen = true;
+    }
     public function delete($id)
     {
         Employee::find($id)->delete();

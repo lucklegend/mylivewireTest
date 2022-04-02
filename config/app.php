@@ -231,5 +231,6 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 
     ],
-
+    'date_format' => 'm/d/Y',
+    'date_format_javascript' => 'MM/DD/YYYY',
 ];
