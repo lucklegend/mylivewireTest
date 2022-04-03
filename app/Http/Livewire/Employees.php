@@ -86,11 +86,10 @@ class Employees extends Component
     public function deleteId($id)
     {
         $this->deletedId = $id;
-        $this->isOpen = true;
     }
-    public function delete($id)
+    public function delete()
     {
-        Employee::find($id)->delete();
+        Employee::find($this->deletedId)->delete();
         session()->flash('message', 'Employee Deleted Successfully.');
     }
 }

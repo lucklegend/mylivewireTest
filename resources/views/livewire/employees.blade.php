@@ -1,10 +1,20 @@
 <div div class="rounded overflow-hidden shadow-lg m-4 px-4 pb-4 bg-white">
     <div class="flex flex-col rounded">
+        @include('livewire.create')
+
+    </div>
+    <div class="flex flex-col rounded">
+        @include('livewire.delete')
+    </div>
+    <div class="flex flex-col rounded">
         <div class="overflow-x-auto sm:-mx-6 lg:-mx-8 rounded">
             <div class="py-2 inline-block min-w-full sm:px-6 lg:px-8 rounded">
-                @include('livewire.create')
-                @include('livewire.delete')
-                <div id="topnav" class="relative overflow-x-auto  sm:rounded-lg">
+                @if (session()->has('message'))
+                <div class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800" role="alert">
+                    <span class="font-medium">Success alert!</span> {{ session('message') }}
+                </div>
+                @endif
+                <div id=" topnav" class="relative overflow-x-auto  sm:rounded-lg">
                     <div class="">
                         <div class=" grid grid-flow-col auto-cols-max gap-4 py-4 mb-2 relative">
                             <div class="row">
