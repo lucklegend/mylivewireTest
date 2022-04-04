@@ -1,1 +1,4 @@
 #live-table tr:nth-child(even) {background: rgb(243 244 246);}
+#live-table tr:nth-child(even):hover {
+  background: #D1D5DB;
+}

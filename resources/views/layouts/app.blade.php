@@ -16,6 +16,7 @@
   </div>
   @livewireScripts
   <script src="https://unpkg.com/flowbite@1.4.1/dist/flowbite.js"></script>
+  <script src="https://unpkg.com/flowbite@1.4.1/dist/datepicker.js"></script>
   <!-- <script src="https://cdn.jsdelivr.net/npm/tw-elements/dist/js/index.min.js"></script> -->
 </body>
 

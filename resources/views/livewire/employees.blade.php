@@ -1,7 +1,9 @@
 <div div class="rounded overflow-hidden shadow-lg m-4 px-4 pb-4 bg-white">
     <div class="flex flex-col rounded">
+        @include('livewire.update')
+    </div>
+    <div class="flex flex-col rounded">
         @include('livewire.create')
-
     </div>
     <div class="flex flex-col rounded">
         @include('livewire.delete')
@@ -25,7 +27,7 @@
                                             <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path>
                                         </svg>
                                     </div>
-                                    <input type="text" id="table-search" class="font-medium bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg grid focus:ring-blue-500 focus:border-blue-500 pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search Employee">
+                                    <input wire:model="search" type="text" id="table-search" class="font-medium bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg grid focus:ring-blue-500 focus:border-blue-500 pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search Employee">
                                 </div>
                             </div>
 
@@ -111,7 +113,7 @@
                                         </button>
                                     </div>
                                     <div class="row  mt-1">
-                                        <button type="button" data-modal-toggle="createModal" class=" text-white bg-sky-500 hover:bg-sky-600 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+                                        <button wire:model="create()" type="button" data-modal-toggle="createModal" class=" text-white bg-sky-500 hover:bg-sky-600 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
                                             <svg class="w-5 h-5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                                             </svg>
@@ -141,15 +143,15 @@
                             <tbody>
                                 @if(count($employees) >0)
                                 @foreach($employees as $emp)
-                                <tr>
+                                <tr class="hover:bg-gray-300">
                                     <td class="px-6 ">{{ $emp->employee_code }}</td>
                                     <td class="px-6 ">{{ $emp->name }}</td>
                                     <td class="px-6 ">{{ $emp->department }}</td>
                                     <td class="px-6 ">{{ $emp->position }}</td>
-                                    <td class="px-6 ">{{ $emp->hire_date }}</td>
+                                    <td class="px-6 ">{{ $emp->getHireDate() }}</td>
                                     <td class="px-6 ">{{ $emp->status }}</td>
                                     <td class="px-6 ">
-                                        <button wire:click="edit({{ $emp->id }})" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Edit</button>
+                                        <button wire:click="edit({{ $emp->id }})" data-modal-toggle="updateModal" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Edit</button>
                                         <button wire:click.prevent.delay="deleteId({{ $emp->id }})" data-modal-toggle="deleteEmp-modal" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Delete</button>
                                     </td>
                                 </tr>
@@ -162,6 +164,7 @@
                             </tbody>
                         </table>
                     </div>
+                    {{$employees->links()}}
                 </div>
             </div>
         </div>

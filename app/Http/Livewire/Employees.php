@@ -5,13 +5,15 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 use App\Models\Employee;
 use Livewire\WithPagination;
-
+use Carbon\Carbon;
 class Employees extends Component
 {
     use WithPagination;
-    public $search, $employees, $employee_code, $name, $department, $position, $hire_date, $status;
+    public $search, $name, $employee_id, $employee_code, $department, $position, $hire_date, $status;
     public $isOpen = 0;
+    public $updateEmp = false;
     public $deleteId = '';
+
     protected $queryString = ['search'];
     protected $rules = [
         'employee_code' => 'required',
@@ -24,12 +26,16 @@ class Employees extends Component
 
     public function render()
     {
-        $this->employees = Employee::all();
-        // $this->employees = Employee::where('name', 'like', '%'.$this->search.'%')->paginate(10);
-
-        return view('livewire.employees');
+        // $this->employees = Employee::search($this->search)->get();
+        return view('livewire.employees', [
+            'employees' => Employee::search($this->search)->paginate(10),
+        ]);
     }
-
+    public function mount()
+    {
+        $this->getEmployeeCode();
+        // echo '<script>console.log('.$this->getEmployeeCode().')</script>';
+    }
     public function create()
     {
         $this->resetInputFields();
@@ -48,7 +54,7 @@ class Employees extends Component
 
     public function resetInputFields()
     {
-        $this->employee_code = '';
+        $this->getEmployeeCode();
         $this->name = '';
         $this->department = '';
         $this->position = '';
@@ -58,20 +64,33 @@ class Employees extends Component
 
     public function store() 
     {
-        $validated = $this->validate();
+        
+        $this->validate();
+        try{
+            Employee::create([
+                'employee_code' => $this->employee_code,
+                'name' => $this->name,
+                'department' => $this->department,
+                'position' => $this->position,
+                'hire_date' => $this->hire_date,
+                'status' => $this->status,
+                'created_at' => Carbon::today(),
+                'updated_at' => Carbon::today(),
 
-        Employee::updateOrCreate(
-            ['id'=> $this->employee_id],
-            $validated
-        );
+            ]);
 
-        session()->flash('message', $this->employee_id ? 'Employee Updated Successfully.' : 'Employee Created Successfully.');
-        $this->closeModal();
-        $this->resetInputFields();
+            session()->flash('message', 'Employee Created Successfully.');
+            $this->closeModal();
+            $this->resetInputFields();
+        }catch(\Exception $e){
+            session()->flash('error', 'Something gone wrong in adding Employee');
+        }
+
     }
 
     public function edit($id)
     {
+        $this->updateEmp = true;
         $employees = Employee::findOrFail($id);
         $this->employee_id = $id;
         $this->employee_code = $employees->employee_code;
@@ -83,6 +102,31 @@ class Employees extends Component
 
         $this->openModal();
     }
+
+    public function update(){
+        $this->validate();
+        try {
+            // Update category
+            Employee::find($this->employee_id)->fill([
+                'employee_code' => $this->employee_code,
+                'name' => $this->name,
+                'department' => $this->department,
+                'position' => $this->position,
+                'hire_date' => $this->hire_date,
+                'status' => $this->status,
+                'updated_at' => Carbon::today(),
+            ])->save();
+
+            session()->flash('message', 'Employee Updated Successfully!!');
+            $this->closeModal();
+            $this->resetInputFields();
+        } catch (\Exception $e) {
+            session()->flash('error', 'Something goes wrong while updating Employee!!');
+            $this->closeModal();
+            $this->resetInputFields();
+        }
+    }
+
     public function deleteId($id)
     {
         $this->deletedId = $id;
@@ -91,5 +135,22 @@ class Employees extends Component
     {
         Employee::find($this->deletedId)->delete();
         session()->flash('message', 'Employee Deleted Successfully.');
+    }    
+    /**
+     * return getEmployeeCode for employee.
+     *
+     * @return void
+     */
+    public function getEmployeeCode()
+    {
+        $lastEmp = Employee::orderBy('id', 'DESC')->first();
+        $empCode = explode('-', $lastEmp->employee_code);
+        $number = $empCode[1]+1;
+        $length = 5;
+        $string = substr(str_repeat(0, $length) . $number, -$length);
+        $newEmpCode = array($empCode[0], $string);
+        $merge = implode('-', $newEmpCode);
+        $this->employee_code = $merge;
+        // return $merge;
     }
 }

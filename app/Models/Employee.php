@@ -21,4 +21,11 @@ class Employee extends Model
     {
         return $this->hire_date->format('M d, Y');
     }
+    public static function search($search)
+    {
+        return empty($search)
+            ? static::query()
+            : static::query()->where('employee_code', 'like', '%' . $search . '%')
+            ->orWhere('name', 'like', '%' . $search . '%');
+    }
 }
